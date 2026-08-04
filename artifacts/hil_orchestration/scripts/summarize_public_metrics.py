@@ -161,6 +161,15 @@ def markdown_summary(result: dict[str, object]) -> str:
 
 def write_manifest(root: Path) -> None:
     entries = []
+    canonical_text_suffixes = {
+        ".csv",
+        ".json",
+        ".jsonl",
+        ".md",
+        ".py",
+        ".sha256",
+        ".txt",
+    }
     for path in sorted(root.rglob("*")):
         relative = path.relative_to(root)
         if (
@@ -170,9 +179,14 @@ def write_manifest(root: Path) -> None:
             or path.suffix in {".pyc", ".pyo"}
         ):
             continue
-        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        payload = path.read_bytes()
+        if path.suffix.lower() in canonical_text_suffixes:
+            payload = payload.replace(b"\r\n", b"\n")
+        digest = hashlib.sha256(payload).hexdigest()
         entries.append(f"{digest}  {relative.as_posix()}")
-    (root / "MANIFEST.sha256").write_text("\n".join(entries) + "\n", encoding="ascii")
+    (root / "MANIFEST.sha256").write_bytes(
+        ("\n".join(entries) + "\n").encode("ascii")
+    )
 
 
 def main() -> None:
@@ -213,10 +227,10 @@ def main() -> None:
 
     args.json_output.parent.mkdir(parents=True, exist_ok=True)
     args.markdown_output.parent.mkdir(parents=True, exist_ok=True)
-    args.json_output.write_text(
-        json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    args.json_output.write_bytes(
+        (json.dumps(result, indent=2, sort_keys=True) + "\n").encode("utf-8")
     )
-    args.markdown_output.write_text(markdown_summary(result), encoding="utf-8")
+    args.markdown_output.write_bytes(markdown_summary(result).encode("utf-8"))
     write_manifest(root)
 
 

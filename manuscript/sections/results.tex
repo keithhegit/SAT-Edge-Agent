@@ -26,7 +26,7 @@ CPU and memory & 8 Cortex-A55 cores, max 2304 MHz; 31 GiB memory \\
 Python runtime & Python 3.13.12 \\
 \rowcolor{graybg}
 Key packages & requests 2.32.5; FastAPI 0.136.1; Uvicorn 0.46.0; Pydantic 2.13.3; NumPy 2.4.4 \\
-Paper branch & \texttt{dev/new-yolo-tool} \\
+Runtime source state & Sanitized development snapshot; public reproduction release linked in Appendix~\ref{app:artifacts} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -85,7 +85,7 @@ The representative FAIR1M case returns seven detections with metadata-backed geo
 
 The primary performance evidence was collected on 2026-07-13 using two fixed FAIR1M workloads. The single-image workload repeatedly uses \texttt{train\_\_t\_10144.jpg}; the serial workload uses that image followed by \texttt{train\_\_t\_10175.jpg}. Warm-up requests were excluded, and the two-image workload invokes the images serially rather than concurrently. Each workload contains 20 measured attempts. Full-Agent latency starts when the Agent receives \texttt{/api/v1/chat/stream} and ends when the SSE stream emits \texttt{done}; it includes Agent routing, detector invocation, result handling, annotated-output production, local response formation, and SSE delivery. YOLO-tool latency is the detector-stage duration reported by the vision tool. CPU and NPU fields were sampled over the full-Agent window.
 
-The resource sampler queried CPU counters and a devfreq/sysfs NPU load/frequency field at 200-ms intervals. The NPU field spans the complete request and is shared by accelerator consumers, including the detector and local language service. Consequently, a sampled value of 100\% is a coarse shared-accelerator software field; it is not detector-only occupancy, per-service attribution, or a calibrated utilization measurement.
+The resource sampler queried CPU counters and a devfreq/sysfs NPU load/frequency field at 200-ms intervals. The NPU field spans the complete request and is shared by accelerator consumers, including the detector and local language service. Consequently, the reported 100\% value is a coarse shared-accelerator software field, not detector-only occupancy, per-service attribution, or calibrated utilization. It measures a different quantity from the detector's wall-clock share of Full-Agent latency.
 
 \begin{table}[htbp]
 \centering
@@ -150,7 +150,7 @@ Peak sampled NPU frequency & 1000 MHz & 1000 MHz \\
 \end{tabular}
 \end{table}
 
-The repeated measurements show that detector execution is a small, workload-bounded fraction of the end-to-end request. It accounts for 2.93\% of the single-image mean and 2.48\% of the serial two-image mean. This finding does not imply that every remaining interval is pure language-model generation. The full-Agent window also includes Agent decisions, request construction, tool-result handling, annotated-output production, and response streaming. Likewise, the 100\% sampled NPU field does not imply continuous detector execution because the field covers shared accelerator activity over the complete request.
+For these fixed workloads, detector execution is a small fraction of the end-to-end request: 2.93\% of the single-image mean and 2.48\% of the serial two-image mean. The remaining interval cannot be assigned entirely to language-model generation because Full-Agent latency also includes agent decisions, request construction, tool-result handling, annotated-output production, and response streaming. The 100\% NPU field likewise does not imply continuous detector execution; it is a shared-accelerator software sample over the complete request.
 
 \subsection{Validated Visible-Response Timeline}
 
@@ -181,7 +181,7 @@ Detector-total mean (nested) & 0.857 s & 1.506 s \\
 \end{tabular}
 \end{table}
 
-The component CSV also contains batch HTTP, decode, inference, and annotation/render substage fields. Audit against all raw serial-batch captures found a systematic factor-of-two aggregation defect in those fields, so they are excluded from the manuscript. The validated timeline supports a narrower conclusion: most user-facing latency lies outside detector execution, both before and after the first visible token, and optimization should target the broader Agent and response-formation path.
+The component CSV also contains batch HTTP, decode, inference, and annotation/render substage fields. Audit against the raw serial-batch captures found a systematic factor-of-two aggregation defect, so those fields are excluded from the manuscript. The validated intervals support a narrower conclusion: most user-facing latency lies outside detector execution, both before and after the first visible token. Finer attribution among orchestration, rendering, and language-service substages requires corrected instrumentation.
 
 \subsection{End-to-End Reproducibility Matrix}
 
