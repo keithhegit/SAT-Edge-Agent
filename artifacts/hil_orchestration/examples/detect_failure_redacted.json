@@ -1,0 +1,8 @@
+{
+  "detail": {
+    "code": "UNSUPPORTED_MEDIA_TYPE",
+    "message": "Only jpg/png are supported.",
+    "request_id": "<redacted>",
+    "details": {}
+  }
+}

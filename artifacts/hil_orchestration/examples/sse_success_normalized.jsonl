@@ -1,0 +1,4 @@
+{"event": "start", "data": {"request_id": "<redacted>", "thread_id": "<redacted>"}}
+{"event": "tool", "data": {"name": "detect_objects", "phase": "result", "images_count": 1, "success_count": 1, "failure_count": 0, "total_detections_count": 7, "image_payload": "<omitted>"}}
+{"event": "token", "data": {"text": "<operator-facing summary omitted>"}}
+{"event": "done", "data": {"request_id": "<redacted>", "duration_ms": 29722.0, "validated_timing": {"detector_total_ms": 851.794, "time_to_first_visible_token_ms": 19966.0, "post_first_token_interval_ms": 9577.0, "sse_tail_ms": 179.0}}}

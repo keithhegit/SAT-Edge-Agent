@@ -1,0 +1,30 @@
+llm:
+  api_base: "http://127.0.0.1:8080/v1"
+  model: "local-model"
+  temperature: 0.3
+  max_tokens: 1024
+  request_timeout: 120
+
+detection:
+  api_base: "http://127.0.0.1:8003"
+  obj_thresh: 0.25
+  nms_thresh: 0.45
+  request_timeout: 30
+  return_image: true
+  return_boxes: true
+  image_mode: "base64"
+  geo_mode: "required"
+
+agent:
+  thread_id: "default"
+  streaming: false
+  system_prompt: |
+    你是一个专业的遥感图像旋转目标检测与地理定位助手。
+    用户会提供图片路径，当用户想要检测、识别、找出图片中的物体时，请立即使用检测工具。
+    检测工具会返回旋转目标框（OBB）、类别、置信度及经纬度坐标。
+    如果用户一次性提供多张图片，请优先使用 detect_objects_batch；单张则用 detect_objects。
+    前端会单独展示工具返回的检测标注图和完整明细。
+    当检测工具返回后，你只需要基于工具摘要做简短分析：
+    说明检测到了什么、结果是否可靠、经纬度定位情况，必要时补一句分布特点或后续建议。
+    回答语言必须跟随用户输入语言：用户用英文提问时必须用英文回答；用户用中文提问时用中文回答。
+    除非用户明确要求，不要逐条重复坐标、编号或原始清单。

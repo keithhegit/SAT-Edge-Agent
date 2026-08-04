@@ -1,0 +1,121 @@
+
+\section{Reproducibility and Release Boundary}
+\label{app:artifacts}
+
+This appendix records the public evidence, measurement definitions, and release boundary used by the current SAT-Edge-Agent manuscript. Repository paths are relative to the public project root.
+
+\subsection{Public Artifact Inventory}
+
+\begin{table}[H]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{4pt}
+\caption{Public artifacts supporting the HIL orchestration claims.}
+\label{tab:hil_artifacts}
+\begin{tabular}{p{0.34\linewidth}p{0.53\linewidth}}
+\toprule
+\rowcolor{gray!12}
+\textbf{Artifact} & \textbf{Repository path} \\
+\midrule
+Public evidence guide & \texttt{artifacts/hil\_orchestration/README.md} \\
+\rowcolor{graybg}
+Repeated fixed-workload rows & \texttt{artifacts/hil\_orchestration/data/}
+\newline\texttt{fixed\_workload\_runs.csv} \\
+Visible-response profiler rows & \texttt{artifacts/hil\_orchestration/data/}
+\newline\texttt{visible\_response\_timing.csv} \\
+\rowcolor{graybg}
+Derived result summaries & \texttt{artifacts/hil\_orchestration/results/}
+\newline\texttt{hil\_orchestration\_summary.json}, \texttt{hil\_orchestration\_summary.md} \\
+Recalculation script & \texttt{artifacts/hil\_orchestration/scripts/}
+\newline\texttt{summarize\_public\_metrics.py} \\
+\rowcolor{graybg}
+Redacted API examples & \texttt{artifacts/hil\_orchestration/examples/}
+\newline\texttt{detect\_success\_redacted.json}, \texttt{detect\_failure\_redacted.json} \\
+Normalized SSE examples & \texttt{artifacts/hil\_orchestration/examples/}
+\newline\texttt{sse\_success\_normalized.jsonl},
+\newline\texttt{sse\_partial\_failure\_normalized.jsonl} \\
+\rowcolor{graybg}
+Integrity manifest & \texttt{artifacts/hil\_orchestration/MANIFEST.sha256} \\
+Model/runtime and reproduction boundary & \texttt{MODEL\_CARD.md}, \texttt{REPRODUCIBILITY.md} \\
+\rowcolor{graybg}
+Dataset acquisition and checksums & \texttt{dataset/README.md}, \texttt{dataset/DATA\_LICENSE.md},
+\newline\texttt{dataset/sample\_100\_mix\_manifest.csv},
+\newline\texttt{dataset/sample\_100\_mix\_sha256.csv} \\
+Power-trace field template & \texttt{artifacts/hil\_orchestration/templates/}
+\newline\texttt{power\_trace\_template.csv} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The public CSV rows are field-level redactions of the internal request records. They remove source-capture names, timestamps, request and thread identifiers, input paths, exact private model labels, and operator text. Running the public script recalculates the means, sample standard deviations, medians, nearest-rank empirical P95 values, detector shares, and profiler means reported in the manuscript.
+
+\subsection{Normalized Service Examples}
+
+The normalized success transcript preserves the event order and selected validated values while omitting payload imagery and natural-language content:
+
+\begin{small}
+\begin{verbatim}
+event: start
+event: tool  {"phase":"result","success_count":1,
+              "failure_count":0,"total_detections_count":7}
+event: token {"text":"<operator-facing summary omitted>"}
+event: done  {"duration_ms":29722,
+              "detector_total_ms":851.794,
+              "time_to_first_visible_token_ms":19966}
+\end{verbatim}
+\end{small}
+
+The partial-result example records two requested inputs, one successful input, one unavailable input, seven retained detections, a final operator-facing response, and the terminal \texttt{done} event:
+
+\begin{small}
+\begin{verbatim}
+event: start
+event: tool  {"phase":"result","success_count":1,
+              "failure_count":1,"total_detections_count":7}
+event: token {"text":"<partial-result summary omitted>"}
+event: done  {"duration_ms":57300,
+              "completion_status":"partial_result"}
+\end{verbatim}
+\end{small}
+
+These examples support event-contract and structured-degradation claims. They do not establish retry, timeout recovery, watchdog behavior, or service restart correctness.
+
+\subsection{Telemetry and Power Boundaries}
+
+CPU counters and the NPU devfreq/sysfs load/frequency field were sampled every 200 ms across the complete Full-Agent request. The detector and local language service can both use the accelerator. The reported 100\% mean NPU-load field is therefore a coarse shared-accelerator software value rather than detector-only occupancy, per-service attribution, or calibrated utilization.
+
+Power observations were collected in a separate 2026-07-03 pilot with different workloads. They are retained as board-level HIL context but are not synchronized with the repeated FAIR1M measurements. The manuscript therefore does not derive energy per request by multiplying the following observations by the 2026-07-13 latency statistics.
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.14}
+\setlength{\tabcolsep}{4pt}
+\caption{Board-level plug-meter observations from the separate pilot. These values do not constitute a calibrated continuous spacecraft power trace.}
+\label{tab:power_snapshot}
+\begin{tabular}{p{0.24\linewidth}p{0.18\linewidth}p{0.43\linewidth}}
+\toprule
+\rowcolor{gray!12}
+\textbf{Operating state} & \textbf{Observed power} & \textbf{Evidence boundary} \\
+\midrule
+Idle baseline & $\sim$3 W & Manual plug-meter screen observation before request and after recovery \\
+\rowcolor{graybg}
+Active-load interval & $\sim$8--9 W & Manual observation during detection and local Agent response formation \\
+Post-output transition & $\sim$4 W & Manual observation after output and before idle recovery \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The public trace template declares the fields needed for a stronger study: timestamp, workload state, voltage, current, power, board temperature, ambient temperature, and note. A calibrated instrument description, measured rail, sampling period, timestamp alignment, and synchronized workload script remain necessary before reporting peak power, energy per request, or thermal behavior.
+
+\subsection{Data, Model, and Privacy Boundary}
+
+FAIR1M-derived images, labels, and geographic fields are third-party data governed by the original FAIR1M/Kaggle terms. The repository publishes source attribution, download instructions, a 100-file manifest, image checksums, and a narrowly redacted output example, but not the image files or full internal metadata bundle. FAIR1M-derived fields in the example remain subject to the source data terms rather than the repository software license. The detector weight is an internal training asset and is not redistributed. The exact board model, exact private language-model identity, private generation throughput, hostnames, IP addresses, VM access methods, internal paths, and raw unredacted logs are also withheld.
+
+The public reproduction path is contract-based. Readers may use a compatible OBB endpoint and an OpenAI-compatible local language endpoint, or recalculate the manuscript statistics directly from the released sanitized evidence. The earlier Qwen Instruct 16K capability benchmark remains separate supplementary material and is not identified as the exact configuration used by the 2026-07-13 repeated HIL experiment.
+
+\subsection{Claim Boundary}
+
+The current manuscript does not claim flight validation, radiation qualification, detector SOTA accuracy, complete model-weight reproduction, independently validated geolocation error, broad-workload latency generalization, robust P99 latency, calibrated power or energy characterization, or a complete autonomous mission scheduler. Each stronger claim would require evidence beyond the fixed-workload HIL measurements, public service examples, runtime profile, and separate plug-meter pilot reported here.
+
+\clearpage

@@ -1,0 +1,92 @@
+{
+  "fixed_workload_runs": {
+    "batch_serial_2": {
+      "attempts": 20,
+      "completed_attempts": 20,
+      "detector_share_of_mean_full_agent_percent": 2.479487436163369,
+      "full_agent_seconds": {
+        "empirical_p95_nearest_rank": 66.882,
+        "maximum": 68.263,
+        "mean": 60.936800000000005,
+        "median": 61.1335,
+        "minimum": 54.379,
+        "n": 20,
+        "sample_sd": 3.5118882250526093
+      },
+      "maximum_cpu_peak_sampled_percent": 87.742,
+      "mean_cpu_sampled_percent": 20.481749999999998,
+      "mean_npu_load_field_percent": 100.0,
+      "peak_npu_frequency_mhz": 1000.0,
+      "target_counts": [
+        18
+      ],
+      "yolo_tool_milliseconds": {
+        "empirical_p95_nearest_rank": 1535.151,
+        "maximum": 1545.368,
+        "mean": 1510.9203,
+        "median": 1513.604,
+        "minimum": 1472.552,
+        "n": 20,
+        "sample_sd": 18.1801981203379
+      }
+    },
+    "single": {
+      "attempts": 20,
+      "completed_attempts": 20,
+      "detector_share_of_mean_full_agent_percent": 2.934609822281804,
+      "full_agent_seconds": {
+        "empirical_p95_nearest_rank": 31.166,
+        "maximum": 34.504,
+        "mean": 29.35265,
+        "median": 29.03,
+        "minimum": 26.919,
+        "n": 20,
+        "sample_sd": 1.6128003522804017
+      },
+      "maximum_cpu_peak_sampled_percent": 86.335,
+      "mean_cpu_sampled_percent": 20.7607,
+      "mean_npu_load_field_percent": 100.0,
+      "peak_npu_frequency_mhz": 1000.0,
+      "target_counts": [
+        7
+      ],
+      "yolo_tool_milliseconds": {
+        "empirical_p95_nearest_rank": 876.657,
+        "maximum": 877.375,
+        "mean": 861.38575,
+        "median": 863.415,
+        "minimum": 836.722,
+        "n": 20,
+        "sample_sd": 11.777675393347055
+      }
+    }
+  },
+  "measurement_notes": {
+    "npu_field": "200-ms sampled devfreq/sysfs field over the full request; shared accelerator consumers; not detector-only occupancy",
+    "power_exclusion": "The separate 2026-07-03 plug-meter pilot is not combined with these 2026-07-13 timings.",
+    "quantile_method": "nearest-rank empirical P95",
+    "standard_deviation": "sample SD with n-1 denominator"
+  },
+  "visible_response_profiler": {
+    "batch_serial_2": {
+      "all_images_successful_attempts": 19,
+      "attempts": 20,
+      "detector_total_mean_seconds": 1.5055262105263156,
+      "full_agent_mean_seconds": 62.36221052631579,
+      "post_first_token_interval_mean_seconds": 33.39194736842105,
+      "sse_tail_mean_seconds": 0.1848421052631579,
+      "structured_partial_results": 1,
+      "time_to_first_visible_token_mean_seconds": 28.78473684210526
+    },
+    "single": {
+      "all_images_successful_attempts": 20,
+      "attempts": 20,
+      "detector_total_mean_seconds": 0.85680885,
+      "full_agent_mean_seconds": 29.7134,
+      "post_first_token_interval_mean_seconds": 13.346799999999998,
+      "sse_tail_mean_seconds": 0.1824,
+      "structured_partial_results": 0,
+      "time_to_first_visible_token_mean_seconds": 16.18365
+    }
+  }
+}

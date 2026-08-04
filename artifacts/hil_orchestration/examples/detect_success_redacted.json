@@ -1,0 +1,56 @@
+{
+  "request_id": "<redacted>",
+  "image": {
+    "file_name": "train__t_10144.jpg",
+    "width": 1000,
+    "height": 1000,
+    "center_geo": [
+      118.121057,
+      24.536394
+    ]
+  },
+  "detections_count": 7,
+  "detections": [
+    {
+      "index": 0,
+      "class_id": 0,
+      "class_name": "A220",
+      "confidence": 0.968452,
+      "polygon": [
+        [
+          598.936,
+          136.701
+        ],
+        [
+          619.303,
+          91.14
+        ],
+        [
+          581.04,
+          74.035
+        ],
+        [
+          560.673,
+          119.596
+        ]
+      ],
+      "pixel_center": [
+        589.988,
+        105.368
+      ],
+      "geo_center": [
+        118.121802,
+        24.539276
+      ]
+    }
+  ],
+  "example_scope": "One of seven detections is shown; the annotated base64 image is omitted.",
+  "perf": {
+    "total_ms": 846.646
+  },
+  "geo_status": "ok",
+  "image_result": {
+    "mode": "base64",
+    "value": "<omitted>"
+  }
+}

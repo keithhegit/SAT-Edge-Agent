@@ -1,0 +1,4 @@
+{"event": "start", "data": {"request_id": "<redacted>", "thread_id": "<redacted>"}}
+{"event": "tool", "data": {"name": "detect_objects_batch", "phase": "result", "images_count": 2, "success_count": 1, "failure_count": 1, "total_detections_count": 7, "items": [{"input": "sample_A", "success": true, "detections_count": 7}, {"input": "sample_B", "success": false, "error": "input unavailable"}], "image_payload": "<omitted>"}}
+{"event": "token", "data": {"text": "<operator-facing partial-result summary omitted>"}}
+{"event": "done", "data": {"request_id": "<redacted>", "duration_ms": 57300.0, "validated_timing": {"detector_total_ms": 857.097, "time_to_first_visible_token_ms": 28202.0, "post_first_token_interval_ms": 28915.0, "sse_tail_ms": 182.0}}}
